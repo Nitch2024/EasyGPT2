@@ -10,6 +10,11 @@ Modest python rewrite of [openai/gpt-2](https://github.com/openai/gpt-2) inspire
 
 If you have any question, need any help or have any suggestion to improve this tutorial email me a cedrickgithub+easygpt2 (at) gmail.com
 
+#### Setup
+
+1. Download easygpt2.py and the converted [gpt2 124M tensors](https://drive.google.com/file/d/1kfqzwWfSG7h6eoC9JIvmOywFj9kzb5_D/view?usp=drive_link)
+2. Decompress all the files from converted.7z into a folder called converted sitting next to easygpt2.py
+   
 #### Usage in command line
 ```
 python easygpt2.py "Alan Turing theorized that computers would one day become"
