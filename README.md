@@ -27,10 +27,10 @@ Output: Alan Turing theorized that computers would one day become the most power
 #### Overview
 
 The code is broken down in 18 logical steps.
-*Steps 1 to 7 transform the input text into tokens
-*Steps 8 to 11 convert tokens into embeddings and load tensors for the model
-*Steps 12 to 14 execute the model and decode a new token in a loop for the number of desired tokens.
-*Steps 15 to 18 transform the new tokens into words
+* Steps 1 to 7 transform the input text into tokens
+* Steps 8 to 11 convert tokens into embeddings and load tensors for the model
+* Steps 12 to 14 execute the model and decode a new token in a loop for the number of desired tokens.
+* Steps 15 to 18 transform the new tokens into words
 
 
 
