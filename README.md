@@ -4,7 +4,7 @@ Modest python rewrite of [openai/gpt-2](https://github.com/openai/gpt-2) inspire
 1. This project has minimal dependencies (sys, json, struct and numpy). Tensorflow is not needed, so no need to deal with Conda or tensorflow lack of support for latest python versions.
 2. Only one source file to make things linear and not be confused by code constructs or jumping through different files and functions. 
 3. The code is not optimized for speed, size or any desirable engineering attribute. The code is meant to be read and understood easily. Numpy is used since naive custom matrix functions are too slow.
-4. The code does explain why the algorithm or attention mechanism works. This is not a "why" tutorial, it is a "how" tutorial. The code shows each detailed step with less room for interpretation than a paper or diagram.
+4. The code does not explain why the algorithm or attention mechanism works. This is not a "why" tutorial, it is more a "how" tutorial. The code shows each detailed step with less room for interpretation than a paper or diagram.
 5. The trained data from [OpenAI original trained GPT2 data (gpt2-small 124M)](https://openaipublic.blob.core.windows.net/gpt-2/models) was pre-converted to a naive tensor format to eliminate the tensorflow dependency.
 6. This tutorial has nothing about training the model. It just shows how to use the pre-trained model and apply it.
 
@@ -12,8 +12,8 @@ If you have any question, need any help or have any suggestion to improve this t
 
 #### Setup
 
-1. Download easygpt2.py and the converted [gpt2 124M tensors](https://drive.google.com/file/d/1kfqzwWfSG7h6eoC9JIvmOywFj9kzb5_D/view?usp=drive_link)
-2. Decompress all the files from converted.7z into a folder called converted sitting next to easygpt2.py
+1. Download easygpt2.py and the [gpt2-small 124M converted tensors](https://drive.google.com/file/d/1p9Y4fKHC0rtZ-ycC99pnssPnqrAI6Cvo/view?usp=drive_link)
+2. Create a folder called data next to easygpt2.py and decompress all the files from data.7z into it
    
 #### Usage in command line
 ```
