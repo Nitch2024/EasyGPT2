@@ -47,7 +47,7 @@ for i in range(0, len(tokens)):
     tokens[i] = encoded
 
 #5. Prepare vocab file for BPE
-vocabFile = open("vocab.bpe", "r", encoding="utf-8")
+vocabFile = open("data\\vocab.bpe", "r", encoding="utf-8")
 vocabData = vocabFile.read() #read whole file
 vocabLines = vocabData.split("\n") #get all the individual lines
 vocabUseful = vocabLines[1:-1] #Do not keep first line that contains #version: 0.2 and last empty line
@@ -83,7 +83,7 @@ for t in tokens:
         MergedTokens.append(p)
 
 #7. Convert token into numerical values 50257 values in vocabulary
-encoderFile = open("encoder.json", "r")
+encoderFile = open("data\\encoder.json", "r")
 encoderJson = json.load(encoderFile)
 Values = []
 for t in MergedTokens:
@@ -91,7 +91,7 @@ for t in MergedTokens:
 print( "Tokens: " + str( Values ) )
 
 #8. Read model parameters
-ParamsJson = json.load(open("hparams.json", "r")) # n_vocab=50257, n_ctx=1024, n_embd=768, n_head=12, n_layer=12
+ParamsJson = json.load(open("data\\hparams.json", "r")) # n_vocab=50257, n_ctx=1024, n_embd=768, n_head=12, n_layer=12
 n_layer = ParamsJson["n_layer"]
 n_head = ParamsJson["n_head"]
 
@@ -102,7 +102,7 @@ def LoadRow(shape, file):
     return np.array([LoadRow(shape[1:], file) for d in range(0, shape[0])])
 
 def LoadTensor( file_name ): # Using a recursive construction of nested arrays to handle arbitrary dimensions
-    inputFile = open(f"converted\\{file_name}.tensorbin", "rb")
+    inputFile = open(f"data\\{file_name}.tensorbin", "rb")
     dims = int.from_bytes(inputFile.read(4), byteorder='little')
     return LoadRow([int.from_bytes(inputFile.read(4), byteorder='little') for d in range(0, dims)], inputFile)
 
