@@ -96,15 +96,12 @@ n_layer = ParamsJson["n_layer"]
 n_head = ParamsJson["n_head"]
 
 #9. Load coefficients
-def LoadRow(shape, file):
-    if len(shape) == 1:
-        return np.array( struct.unpack(f'{shape[0]}f', file.read(4 * shape[0])) )
-    return np.array([LoadRow(shape[1:], file) for d in range(0, shape[0])])
-
-def LoadTensor( file_name ): # Using a recursive construction of nested arrays to handle arbitrary dimensions
-    inputFile = open(f"data\\{file_name}.tensorbin", "rb")
-    dims = int.from_bytes(inputFile.read(4), byteorder='little')
-    return LoadRow([int.from_bytes(inputFile.read(4), byteorder='little') for d in range(0, dims)], inputFile)
+def LoadTensor( file_name ): # Custom naive binary tensor format
+    inputFile = open(f"data\\{file_name}.tensorbin", "rb") # open file as binary
+    dims = int.from_bytes(inputFile.read(4), byteorder='little')  # read number of dimensions as the first 4 bytes integer in the file
+    dimensions = [int.from_bytes(inputFile.read(4), byteorder='little') for d in range(0, dims)] # create an array with each dimension read from the file as 4 byte integer
+    num_elements = np.prod( dimensions ) # np.prod returns the product of each component in the array
+    return np.frombuffer( inputFile.read(), dtype=np.float32).reshape( dimensions ) # read all the file data left, convert it to linear array of floats, and the shape with tensor dimensions
 
 print( "Loading tensors" )
 wte = LoadTensor("wte") #Tokens Embeddings 50257 possible vectors of size 768
