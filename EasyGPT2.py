@@ -118,9 +118,8 @@ attn_c_attn_w = [[[],[],[]] for i in range(0, n_layer)]
 for i in range(0, n_layer): # model has n_layer layers
     qkv_names = ["q","k","v"]
     for j in range(0, 3): # each layer has 3 pieces q, k, v
-        for h in range( 0, n_head): # each piece has n_head subdivisions also called heads
-            attn_c_attn_b[i][j].append( LoadTensor(f"layer{i}_attn_c_attn_b_{qkv_names[j]}_h{h}") )
-            attn_c_attn_w[i][j].append( LoadTensor("layer%d_attn_c_attn_w_%s_h%d" % (i,qkv_names[j],h) ) )
+        attn_c_attn_b[i][j] = [LoadTensor(f"layer{i}_attn_c_attn_b_{qkv_names[j]}_h{h}") for h in range(0, n_head)] # array of n_head vectors of dimension n_embd/n_head
+        attn_c_attn_w[i][j] = [LoadTensor(f"layer{i}_attn_c_attn_w_{qkv_names[j]}_h{h}") for h in range(0, n_head)] # array of n_head matrices of dimension n_embd x n_embd/n_head
 attn_c_proj_b = [LoadTensor("layer%d_attn_c_proj_b" % i) for i in range(0, n_layer)] # array of n_layer vectors of dimension n_embd
 attn_c_proj_w = [LoadTensor("layer%d_attn_c_proj_w" % i) for i in range(0, n_layer)] # array of n_layer matrices of dimension n_embd x n_embd
 ln_1_b = [LoadTensor("layer%d_ln_1_b" % i) for i in range(0, n_layer)] # array of n_layer vectors of dimension n_embd
