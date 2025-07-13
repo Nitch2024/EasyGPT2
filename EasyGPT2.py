@@ -148,28 +148,7 @@ def normalize_scale_shift(x, g, b, eps: float = 1e-5): # x dim nb_tokens x n_emb
             res[r][j] = g[j]*(x[r][j]-mean)/stdDev+b[j]
     return res
 
-def softmax(x):
-    res = np.empty(x.shape)
-    for r in range(0, x.shape[0]):
-        maxRow = max(x[r])
-        sum = 0
-        for i in range(0, x.shape[1]):
-            res[r][i]=np.exp(x[r][i] - maxRow)
-            sum = sum + res[r][i]
-        for i in range(0, x.shape[1]):
-            res[r][i]=res[r][i]/sum
-    return res
-
 for outputTokens in range( 0, 8 ):
-
-    mask = np.empty( [ Embeddings.shape[ 0 ], Embeddings.shape[ 0 ] ] )
-    for r in range(0, mask.shape[0] ):
-        for c in range(0, mask.shape[1] ):
-            if r < c :
-                mask[r][c] = -1e10
-            else:
-                mask[r][c] = 0.0
-
     x = np.array( Embeddings ) # input sequence number of [n_seq, n_embd]
 
     for layer in range(0, n_layer):
@@ -183,13 +162,24 @@ for outputTokens in range( 0, 8 ):
             k = np.matmul(xn, attn_c_attn_w[layer][1][head] ) + attn_c_attn_b[layer][1][head] # [n_seq, n_embd/n_head] -> [n_seq, n_embd/n_head]
             v = np.matmul(xn, attn_c_attn_w[layer][2][head] ) + attn_c_attn_b[layer][2][head] # [n_seq, n_embd/n_head] -> [n_seq, n_embd/n_head]
             qkt = np.matmul( q, k.T ) * ( 1 / np.sqrt(q.shape[-1]) ) # [n_seq, n_seq]
-            attention = np.matmul( softmax(qkt + mask), v ) # [n_seq, n_embd/n_head]
-            for j in range(0, xn.shape[0]): #concatenate in temp
+            # softmax and mask
+            for r in range(0, qkt.shape[0]): # apply softmax to each masked row of qkt
+                maxRow = max(qkt[r][:r+1]) # find the max value of the first r elements of the row, the rest is masked
+                sum = 0
+                for c in range(0, r+1):
+                    qkt[r][c]=np.exp(qkt[r][c] - maxRow) # apply soft mask formula first part to first r elements of the row
+                    sum = sum + qkt[r][c]
+                for c in range(0, r+1):
+                    qkt[r][c]=qkt[r][c]/sum  # apply soft mask formula second part to first r elements of the row
+                for c in range(r+1, qkt.shape[1]):
+                    qkt[r][c]=0.0 # mask the rest of the row
+            attention = np.matmul( qkt, v ) # for this head attention is q.Transpose(k).v [n_seq, n_embd/n_head]
+            for j in range(0, xn.shape[0]): # concatenate attention heads in temp
                 for k in range(0, attention.shape[1]):
                     temp[j][k+head*attention.shape[1]]=attention[j][k]
         temp = np.matmul(temp, attn_c_proj_w[layer] ) + attn_c_proj_b[layer] # [n_seq, n_embd] -> [n_seq, n_embd]
         x = x + temp
-
+        
         # position-wise feed forward network
         xn = normalize_scale_shift(x,ln_2_g[layer],ln_2_b[layer])
         temp = np.matmul(xn, mlp_c_fc_w[layer]) + mlp_c_fc_b[layer] # widen / [n_seq, n_embd] -> [n_seq, 4*n_embd]
