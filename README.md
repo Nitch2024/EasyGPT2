@@ -37,5 +37,13 @@ The code is broken down in 18 logical steps.
 * Steps 12 to 14 execute the model and decode a new token in a loop for the number of desired tokens.
 * Steps 15 to 18 transform the new tokens into words
 
+#### Preamble
+
+The code use extensively array/list/string manipulation convenience provided by Python, so make sure you are comfortable with it.
+* Creation [more here](https://www.w3schools.com/python/python_lists_comprehension.asp): myList = [i+1 for i in range(0,5)] will create a list with [1,2,3,4,5]
+* Sliced list [more here](https://railsware.com/blog/indexing-and-slicing-for-lists-tuples-strings-sequential-types/): subList = myList[1:-2] will set subList to [2,3]
+* Sub strings [more here](https://www.w3schools.com/python/python_strings_slicing.asp): subStr = str("mystring")[2:4] will set subStr to "st"
+
+
 
 
